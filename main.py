@@ -1,4 +1,4 @@
-import tree
+import tree, pydot_graph_util, pydot_graph_viz
 from tree import *
 
 tree = load_tree("""{"k": 10, "l": {"k": 5, "l": null, "r": null}, "r": {"k": 15, "l": null, "r": null}}""")
@@ -16,3 +16,5 @@ print(dump_tree(tree))
 tree = zig(tree, tree.right)
 
 print(dump_tree(tree))
+
+construct_tree(tree)
