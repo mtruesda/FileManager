@@ -12,9 +12,9 @@ from typing import List, Text, Union
 # Node class
 class Node():
     def __init__(self, key, left, right):
-        self.key = key # should be a string
-        self.left = left
-        self.right = right
+        self.key = key      # should be a string
+        self.left = left    # node left
+        self.right = right  # node right
 
 def insert(root, key):
     edgeNode = splay(root, key)
@@ -32,11 +32,7 @@ def splay(root, key, parent):
     else:
         values = (root, parent)
 
-
-
-
 # Movement Operations Below
-
 def zig(root, node):
     if node == root.left:
         temp = node.right
@@ -55,9 +51,6 @@ def zigzig(root, node):
     root = zig(root, node)
     root = zig(root, node)
     return root
-
-def zigzag(root, node):
-    return None
 
 # trying to get better with JSON
 def load_tree(json_str: str) -> Node:
@@ -83,10 +76,8 @@ def dump_tree(root: Node) -> str:
             "l": (_to_dict(node.left) if node.left is not None else None),
             "r": (_to_dict(node.right) if node.right is not None else None),
         }
-    
     if root == None:
         dict_repr = {}
     else:
         dict_repr = _to_dict(root)
-
     return json.dumps(dict_repr)
