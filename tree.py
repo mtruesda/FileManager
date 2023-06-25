@@ -16,29 +16,79 @@ class Node():
         self.left = left    # node left
         self.right = right  # node right
 
+# I believe this is gucci. Gonna have to test it.
 def insert(root, key):
-    edgeNode = splay(root, key)
-    return None
+    if root is None:
+        return Node(key, None, None)
+    node = None
+    moddedTree = splay(root, search(root, key))
+    if key > moddedTree.key:
+        node = Node(key, moddedTree, moddedTree.right)
+        node.left.right = None
+    elif key < moddedTree.key:
+        node = Node(key, moddedTree.left, moddedTree)
+        node.right.left = None
+    else:
+        raise RuntimeError("Not sure what's going on")
+    return node
 
 def delete(root, key):
-    edgeNode = splay(root, key, None)
     return None
 
-def splay(root, key, parent):
-    if root.key > key and root.right != None:
-        splay(root.right, key, root)
-    elif root.key < key and root.left != None:
-        splay(root.right, key, root)
+# works. Finds the nearest ancestor to the given key and returns its key
+def search(root, key):
+    if root is None:
+        return None
+    elif root.key == key:
+        raise ValueError("Already exists within the tree") # can be written to avoid error -- come back to this
+    elif root.left != None and key < root.key:
+        return search(root.left, key)
+    elif root.right != None and key > root.key:
+        return search(root.right, key)
     else:
-        values = (root, parent)
+        return root.key
+
+# made a more cleaned up version I guess. Hopefully more efficient than before.
+def splay(root, key):
+    if root == None or root.key == key:
+        return root
+    if root.left is not None:
+        # zig case
+        if root.left.key == key:
+            return zig(root, root.left)
+        # zigzag case
+        elif root.left.right is not None and root.left.right.key == key:
+            return zigzag(root.left, root.left.right, root)
+        # zigzig case
+        elif root.left.left is not None and root.left.left.key == key:
+            return zigzig(root.left, root.left.left, root)
+    if root.right is not None:
+        # zig case
+        if root.right.key == key:
+            return zig(root, root.right)
+        # zigzag case
+        elif root.right.left is not None and root.right.left.key == key:
+            return zigzag(root.right, root.left.right, root)
+        # zigzig case
+        elif root.right.right is not None and root.right.right.key == key:
+            return zigzig(root.right, root.right.right, root)
+    # otherwise go deeper
+    if key > root.key:
+        root.right = splay(root.right, key)
+    elif key < root.key:
+        root.left = splay(root.left, key)
+    else:
+        raise ValueError("Something weird happened")
 
 # Movement Operations Below
+
+# basically automatically performs a rotation based on the node location
 def zig(root, node):
-    if node == root.left:
+    if root.left is not None and node.key == root.left.key:
         temp = node.right
         node.right = root
         root.left = temp
-    elif node == root.right:
+    elif root.right is not None and node.key == root.right.key:
         temp = node.left
         node.left = root
         root.right = temp
@@ -46,11 +96,23 @@ def zig(root, node):
         return None
     return node
 
-# will possibly work to zig zag as well because of how zig works?
-def zigzig(root, node):
-    root = zig(root, node)
-    root = zig(root, node)
-    return root
+# performs zigzig algorithm. A little jank
+# "A temporary solution is often a permanent one"
+def zigzig(root, node, grandParent):
+    root = zig(grandParent, root)
+    node = zig(root, node)
+    return node
+
+def zigzag(root, node, grandParent):
+    if grandParent.right == root:
+        grandParent.right = zig(root, node)
+        grandParent = zig(grandParent, grandParent.right)
+    elif grandParent.left == root:
+        grandParent.left = zig(root, node)
+        grandParent = zig(grandParent, grandParent.left)
+    else:
+        raise ValueError
+    return grandParent
 
 # trying to get better with JSON
 def load_tree(json_str: str) -> Node:
@@ -74,10 +136,11 @@ def dump_tree(root: Node) -> str:
         return {
             "k": node.key,
             "l": (_to_dict(node.left) if node.left is not None else None),
-            "r": (_to_dict(node.right) if node.right is not None else None),
+            "r": (_to_dict(node.right) if node.right is not None else None)
         }
     if root == None:
         dict_repr = {}
     else:
         dict_repr = _to_dict(root)
     return json.dumps(dict_repr)
+
