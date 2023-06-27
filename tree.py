@@ -13,16 +13,6 @@ class Node():
         self.left = left    # node left
         self.right = right  # node right
         
-def is_folder_or_file(string):
-    # Match the string against a pattern that checks for the presence of an extension
-    pattern = r".+\..+$"  # Matches strings with at least one character before a dot and at least one character after the dot
-    match = re.match(pattern, string)
-    
-    if match:
-        return "File"
-    else:
-        return "Folder"
-        
 # I believe this is gucci. Gonna have to test it.
 def insert(root, key):
     if root is None:

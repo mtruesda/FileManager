@@ -8,7 +8,7 @@ I'm hoping that I can use the traversal functions to provide sections in my file
 
 I'm using Python because I have a lot of experiennce writing these sorts of projects in Python and I'm very comfortable with the modules that would be necessary to make something like this work well.
 
-Something that had to be accounted for was the use of folders in my tree/directory. If something within the tree has a name without an extension, it is therefore a folder. This is determined through the use of a regex. The next step is to figure out how I'm going to add that to the path of the file.
+The folders shouldn't impact the tree itself too much. They will be accounted for when it's necessary such as when deleting or inserting files. The hard part will be accounting for filepaths when opening and accessing files.
 
 ## Description of Files
 
@@ -32,6 +32,8 @@ This will be where the gui class is built. I'm considering building the class us
 ### FileManagement.py
 
 this file just contains the backend code involved with determining the os and pulling up the file using the default application of the machine.
+
+This is also where the functions used to modify the actual storage and tree are located.
 
 ### pydot_graph_util.py
 
