@@ -64,7 +64,10 @@ def testTraversals():
 def testStringInstance():
     emptyTree = None
     emptyTree = insert(emptyTree, 'hello')
+    emptyTree = insert(emptyTree, 'world')
+    emptyTree = insert(emptyTree, 'a')
     construct_graph(emptyTree).write_png('stringtest.png')
+    print(emptyTree)
 
 # call function
 testStringInstance()

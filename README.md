@@ -8,6 +8,8 @@ I'm hoping that I can use the traversal functions to provide sections in my file
 
 I'm using Python because I have a lot of experiennce writing these sorts of projects in Python and I'm very comfortable with the modules that would be necessary to make something like this work well.
 
+Something that had to be accounted for was the use of folders in my tree/directory. If something within the tree has a name without an extension, it is therefore a folder. This is determined through the use of a regex. The next step is to figure out how I'm going to add that to the path of the file.
+
 ## Description of Files
 
 ### Main.py
@@ -26,6 +28,10 @@ A big consideration when looking at what the keys of the nodes will look like is
 ### gui.py
 
 This will be where the gui class is built. I'm considering building the class using tkinter and maybe making an attempt using another module like Kivy. The front end items will be contained here.
+
+### FileManagement.py
+
+this file just contains the backend code involved with determining the os and pulling up the file using the default application of the machine.
 
 ### pydot_graph_util.py
 
