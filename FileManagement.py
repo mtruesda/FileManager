@@ -32,11 +32,11 @@ def fileDeterminer(string):
     
 def create_file(path, filename, root):
     root = insert(root, path + filename)
-    open(path + filename, 'w').close()
+    open(path + '/' + filename, 'w').close()
     return root
 
 def create_folder(path, foldername):
-    os.makedirs(path + foldername)
+    os.makedirs(path + '/' + foldername)
 
 def delete_path(path, tree):
     if fileDeterminer(path) == 'File':

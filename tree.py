@@ -32,6 +32,8 @@ def insert(root, key):
 # this function needs to be tested
 # search function may not need stri specification.
 def delete(root, key):
+    if root == None:
+        return None
     root = splay(root, search(root, key, "delete"))
     if root.key == key:
         if root.left is None:

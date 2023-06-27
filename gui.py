@@ -1,61 +1,57 @@
-#import tkinter as tk
-from tkinter import *
+import tkinter as tk
+# from tkinter import *
 from FileManagement import *
-
-# class gui():
-#     def __init__(self):
-#         print("gui initialization")
-#         window = tk.Tk()
-#         window.mainloop
-
-# gui()
 
 class gui():
     def __init__(self):
-        # tree
-        tree = None
+        self.path = ''
+        self.tree = None
 
-        # initialize
-        print("gui initialization")
-        window = Tk()
-        window.geometry('800x500')
-        
-        # mentu
-        m = Menu(window)
-        m.add_command(label = 'forward', command=forward(''))
-        m.add_command(label = 'back', command=back(''))
-        m.add_command(label = 'Add File', command=create_file(''))
-        m.add_command(label = 'Add Folder', command=create_folder(''))
-        m.add_command(label = 'Delete', command=delete_path(''))
+        self.root = tk.Tk()
+        self.root.geometry("800x600")
+        self.root.title('File Manager')
 
-        window.config(menu=m)
+        nmenu = tk.Menu(self.root)
 
-        # Frames
-        outer = Frame(window, bg = 'blue').pack()
-        left = Frame(outer, width = 200).pack(side = 'left')
-        right = Frame(outer, width = 600).pack(side = 'right')
-        topRight = Frame(right).pack(side = 'top')
-        topLeft = Frame(left).pack(side = 'top')
-        bottomRight = Frame(right).pack(side = 'bottom')
-        bottomLeft = Frame(left).pack(side = 'bottom')
-        
-        # Labels
-        #nameLabel = Label(topLeft, text="File Manager").place(x = 5, y = 5)
-        #secondLabel = Label(topRight, text = "Second label").place(x = 105, y = 5)
+        fileMenu = tk.Menu(nmenu, tearoff=0)
+        # The fact that I needed to put lambda in here to make this work is ABSOLUTELY WILD
+        fileMenu.add_command(label='New File', command=lambda: self.miniFile())
+        fileMenu.add_command(label='New Folder', command=lambda: self.miniFolder)
 
-        
+        nmenu.add_cascade(label='File',  menu=fileMenu)
 
-        #label3 = Label(topLeft, text ='test 2').pack()
-        
-        # Buttons
-        #addFile = Button(topRight, text='New File').grid(column = 0, row = 0)
-        #addFolder = Button(topRight, text='Folder').grid(column = 1, row = 0)
+        self.root.config(menu=nmenu)
 
-        # Pane
-        pane = PanedWindow(bottomRight).pack()
-        locationsPane = PanedWindow(bottomLeft).pack()
+        self.root.mainloop()
+    
+    def miniFile(self):
+        mini = tk.Tk()
+        mini.geometry("300x100")
+        mini.title('Add File')
+        label = tk.Label(mini, text='Name the file').pack()
+        text = tk.Text(mini, height=1, width=15).pack()
+        button = tk.Button(mini, text='Submit', command=lambda: self.handleMiniFile(text, mini)).pack()
 
-        # looping
-        window.mainloop()
+    def miniFolder(self):
+        mini = tk.Tk()
+        mini.geometry("300x300")
+        mini.title('Add Folder')
+        label = tk.Label(mini, text='Name the folder').pack()
+        text = tk.Text(mini, height=1, width=15).pack()
+        button = tk.Button(mini, text='Submit').pack()
+
+    def handleMiniFile(self, text, mini):
+        mini.destroy()
+        self.tree = create_file(self.path, text.get(), self.tree)
+        self.refresh()
+
+    def handleMiniFolder(self, text, mini):
+        return None
+    
+    def refresh(self):
+        return None
+
+def func():
+    print("hi")
 
 gui()
