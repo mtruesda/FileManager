@@ -23,30 +23,32 @@ class gui():
         self.root.config(menu=nmenu)
 
         self.root.mainloop()
-    
+    # allows user to name a file
     def miniFile(self):
         mini = tk.Tk()
         mini.geometry("300x100")
         mini.title('Add File')
-        label = tk.Label(mini, text='Name the file').pack()
+        tk.Label(mini, text='Name the file').pack()
         text = tk.Text(mini, height=1, width=15).pack()
-        button = tk.Button(mini, text='Submit', command=lambda: self.handleMiniFile(text, mini)).pack()
-
+        tk.Button(mini, text='Submit', command=lambda: self.handleMiniFile(text, mini)).pack()
+    # allows user to name a folder
     def miniFolder(self):
         mini = tk.Tk()
         mini.geometry("300x300")
         mini.title('Add Folder')
-        label = tk.Label(mini, text='Name the folder').pack()
+        tk.Label(mini, text='Name the folder').pack()
         text = tk.Text(mini, height=1, width=15).pack()
-        button = tk.Button(mini, text='Submit').pack()
-
+        tk.Button(mini, text='Submit', command=lambda: self.handleMiniFolder(text, mini)).pack()
+    # handles submitting the button for a filename
     def handleMiniFile(self, text, mini):
         mini.destroy()
         self.tree = create_file(self.path, text.get(), self.tree)
         self.refresh()
-
+    # handles submitting the button for a foldername
     def handleMiniFolder(self, text, mini):
-        return None
+        mini.destroy()
+        create_folder(self.path, text.get())
+        self.refresh()
     
     def refresh(self):
         return None
