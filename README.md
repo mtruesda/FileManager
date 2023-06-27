@@ -34,3 +34,9 @@ This is a visualizer that I repurposed from another project that actually turned
 ### test.py
 
 This is where most of my testing will be housed and a lot of tree models to use for those tests will be located.
+
+## Using the File Manager
+
+### Files Folder
+
+The files folder will be where the files that come up in the file manager will be. 
