@@ -1,5 +1,9 @@
 import tree
 from tree import *
+import pydot_graph_util
+from pydot_graph_util import *
+
+# bunch of tree models below and then test functions
 
 # base tree
 tree = load_tree("""{"k": 10, "l": {"k": 5, "l": null, "r": null}, "r": {"k": 15, "l": null, "r": null}}""")
@@ -41,23 +45,27 @@ example_tree = load_tree("""{"k": 30, "l": {"k": 10, "l": null, "r": null},
                                                                    "l": {"k": 55, "l": null, "r": null},
                                                                    "r": null}}}""")
 
-#print(dump_tree(example_tree))
+def testBuildTree():
+    testEmptyTree = None
+    modTree = insert(testEmptyTree,30)
+    modTree = insert(modTree, 10)
+    modTree = insert(modTree, 40)
+    modTree = insert(modTree, 35)
+    modTree = insert(modTree, 36)
+    modTree = delete(modTree, 30)
+    construct_graph(modTree).write_png('modTree.png')
 
-#print(dump_tree(tree))
+def testTraversals():
+    construct_graph(example_tree).write_png('modified_tree.png')
+    lst = postorder(example_tree)
+    lst2 = preorder(example_tree)
+    ls3 = inorder(example_tree)
+    
+def testStringInstance():
+    emptyTree = None
+    emptyTree = insert(emptyTree, 'hello')
+    construct_graph(emptyTree).write_png('stringtest.png')
 
-#modified_tree = zigzag(tree5.left, tree5.left.right, tree5)
-#modified_tree = zigzag(tree6.right, tree6.right.left, tree6)
-#print(dump_tree(modified_tree))
+# call function
+testStringInstance()
 
-#print(search(example_tree, 62))
-#modified_tree = splay(tree3, 10)
-
-testEmptyTree = None
-
-modTree = insert(testEmptyTree,30)
-modTree = insert(modTree, 10)
-modTree = insert(modTree, 40)
-modTree = insert(modTree, 35)
-modTree = insert(modTree, 36)
-
-print(dump_tree(modTree))

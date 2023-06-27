@@ -3,7 +3,6 @@
 #
 # file for the splay tree
 
-
 import json
 import math
 
@@ -21,7 +20,7 @@ def insert(root, key):
     if root is None:
         return Node(key, None, None)
     node = None
-    moddedTree = splay(root, search(root, key))
+    moddedTree = splay(root, search(root, key, "insert"))
     if key > moddedTree.key:
         node = Node(key, moddedTree, moddedTree.right)
         node.left.right = None
@@ -32,19 +31,31 @@ def insert(root, key):
         raise RuntimeError("Not sure what's going on")
     return node
 
+# this function needs to be tested
+# search function may not need stri specification.
 def delete(root, key):
-    return None
+    root = splay(root, search(root, key, "delete"))
+    if root.key == key:
+        if root.left is None:
+            root = root.right
+        elif root.right is None:
+            root = root.left
+        else:
+            root.right = splay(root.right, search(root.right, key, "delete"))
+            root.right.left = root.left
+            root = root.right
+    return root
 
 # works. Finds the nearest ancestor to the given key and returns its key
-def search(root, key):
+def search(root, key, stri):
     if root is None:
         return None
-    elif root.key == key:
+    elif root.key == key and stri == "insert":
         raise ValueError("Already exists within the tree") # can be written to avoid error -- come back to this
     elif root.left != None and key < root.key:
-        return search(root.left, key)
+        return search(root.left, key, stri)
     elif root.right != None and key > root.key:
-        return search(root.right, key)
+        return search(root.right, key, stri)
     else:
         return root.key
 
@@ -113,6 +124,36 @@ def zigzag(root, node, grandParent):
     else:
         raise ValueError
     return grandParent
+
+
+# these three functions will return a list of nodes and I'll determine later how I want to parse that list
+# may consider adding balance to the tree to see more accurate distance results
+# using balance may allow me to see what is furthest or closest in the tree allowing for both a recents and a least recents section
+def inorder(root):
+    lst = []
+    if root.left != None:
+        lst += inorder(root.left)
+    lst.append(root)
+    if root.right != None:
+        lst += inorder(root.right)
+    return lst
+
+def preorder(root):
+    lst = [root]
+    if root.left != None:
+        lst += preorder(root.left)
+    if root.right != None:
+        lst += preorder(root.right)
+    return lst
+    
+def postorder(root):
+    lst = []
+    if root.left != None:
+        lst += postorder(root.left)
+    if root.right != None:
+        lst += postorder(root.right)
+    lst.append(root)
+    return lst
 
 # trying to get better with JSON
 def load_tree(json_str: str) -> Node:
