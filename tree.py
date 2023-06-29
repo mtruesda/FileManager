@@ -12,6 +12,8 @@ class Node():
         self.key = key      # should be a string
         self.left = left    # node left
         self.right = right  # node right
+    def __str__(self):
+        return self.key
         
 # I believe this is gucci. Gonna have to test it.
 def insert(root, key):
