@@ -31,7 +31,7 @@ def fileDeterminer(string):
         return "Folder"
     
 def create_file(path, filename, root):
-    root = insert(root, path + filename)
+    root = insert(root, path + '/' + filename)
     open(path + '/' + filename, 'w').close()
     return root
 

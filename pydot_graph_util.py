@@ -6,7 +6,6 @@ from pydot import Edge as PydotEdge
 hinted = False
 
 from tree import Node
-import tree
 
 # Visualization helper -- honestly impressed I was able to repurpose this well
 def construct_graph(root: Node) -> Dot:
