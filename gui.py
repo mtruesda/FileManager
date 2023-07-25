@@ -23,10 +23,10 @@ class gui():
 
         ### Start the user with an alphabetical list of files
 
-        self.outer = tk.Frame(self.root)
-        self.text = tk.Text(self.outer).pack(side='left')
-        self.sb = tk.Scrollbar(self.root, command=self.text.yview).pack(side='right')
-        self.text.configure(yscrollcommand=self.sb.set)
+        #self.outer = tk.Frame(self.root)
+        #self.text = tk.Text(self.outer).pack(side='left')
+        #self.sb = tk.Scrollbar(self.root, command=self.text.yview).pack(side='right')
+        #self.text.configure(yscrollcommand=self.sb.set)
 
         ###
 
