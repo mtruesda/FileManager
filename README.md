@@ -10,6 +10,8 @@ I'm using Python because I have a lot of experiennce writing these sorts of proj
 
 The folders shouldn't impact the tree itself too much. They will be accounted for when it's necessary such as when deleting or inserting files. The hard part will be accounting for filepaths when opening and accessing files.
 
+Something that recently came to mind was adjusting the paths entered into the tree so that it doesn't matter what computer you're working from. The way the tree is currently set up, the paths are all completely based on the machine on which you run the program.
+
 ## Description of Files
 
 ### Main.py

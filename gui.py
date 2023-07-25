@@ -1,74 +1,41 @@
+import os
 import tkinter as tk
-# from tkinter import *
-from pydot_graph_util import *
-from FileManagement import *
+from tkinter import filedialog
 
-class gui():
-    def __init__(self):
-        self.path = home()
-        self.tree = None
+def fill_listbox(path):
+    listbox.delete(0, tk.END)
+    for name in os.listdir(path):
+        listbox.insert(tk.END, name)
 
-        self.root = tk.Tk()
-        self.root.geometry("800x600")
-        self.root.title('File Manager')
+def on_click(event):
+    # If user double clicks on directory, open it
+    index = listbox.curselection()
+    #print(index)
+    file = listbox.get(index)
+    
+    new_path = os.path.join(current_directory.get(), file)
 
-        self.nmenu = tk.Menu(self.root)
+    if os.path.isdir(new_path):
+        current_directory.set(new_path)
+        fill_listbox(new_path)
+    else:
+        print("File: ", new_path)
 
-        self.fileMenu = tk.Menu(self.nmenu, tearoff=0)
-        # The fact that I needed to put lambda in here to make this work is ABSOLUTELY WILD
-        self.fileMenu.add_command(label='New File', command=lambda: self.miniFile())
-        self.fileMenu.add_command(label='New Folder', command=lambda: self.miniFolder)
+root = tk.Tk()
 
-        self.nmenu.add_cascade(label='File',  menu=self.fileMenu)
+current_directory = tk.StringVar(root)
 
-        ### Start the user with an alphabetical list of files
+# User can select directory with this button
+button = tk.Button(root, text="Select directory", command=lambda: current_directory.set(filedialog.askdirectory()))
+button.pack()
 
-        #self.outer = tk.Frame(self.root)
-        #self.text = tk.Text(self.outer).pack(side='left')
-        #self.sb = tk.Scrollbar(self.root, command=self.text.yview).pack(side='right')
-        #self.text.configure(yscrollcommand=self.sb.set)
+listbox = tk.Listbox(root)
+listbox.pack(fill="both", expand=True)
 
-        ###
+# Update listbox whenever directory changes
+current_directory.trace_add("write", lambda *args: fill_listbox(current_directory.get()))
 
-        self.root.config(menu=self.nmenu)
-        self.root.mainloop()
-        
-    # allows user to name a file
-    def miniFile(self):
-        self.mini = tk.Tk()
-        self.mini.geometry("300x100")
-        self.mini.title('Add File')
-        tk.Label(self.mini, text='Name the file').pack()
-        self.text = tk.Entry(self.mini)
-        self.text.pack()
-        tk.Button(self.mini, text='Submit', command=self.handleMiniFile).pack()
-        self.mini.mainloop()
-    # allows user to name a folder
-    def miniFolder(self):
-        self.mini = tk.Tk()
-        self.mini.geometry("300x100")
-        self.mini.title('Add Folder')
-        tk.Label(self.mini, text='Name the folder').pack()
-        self.text = tk.Entry(self.mini)
-        self.text.pack()
-        tk.Button(self.mini, text='Submit', command=self.handleMiniFolder).pack()
-        self.mini.mainloop()
-    # handles submitting the button for a filename
-    def handleMiniFile(self):
-        new_text = self.text.get()
-        self.mini.destroy()
-        self.tree = create_file(self.path, new_text, self.tree)
-        self.refresh()
-    # handles submitting the button for a foldername
-    def handleMiniFolder(self):
-        new_text = self.text.get()
-        self.mini.destroy()
-        create_folder(self.path, new_text)
-        self.refresh()
+# Handle double click on listbox items
+listbox.bind('<Double-1>', on_click)
 
-    def refresh(self):
-        construct_graph(self.tree).write_png('bigTest.png')
-        for i in inorder(self.tree):
-            print(i, "\n")
-
-gui()
+root.mainloop()

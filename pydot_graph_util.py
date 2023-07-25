@@ -16,19 +16,6 @@ def construct_graph(root: Node) -> Dot:
         if root is None:
             return graph
 
-        # I don't think I'll have this issue
-        #if not (isinstance(root.key, int) or not (isinstance(root.key, str))):
-        #    raise TypeError(f"Unknown type {type(root.key)} for node keys.")
-
-        # if tree is not None:
-        #     label = f'{str(root.key)} | {tree.height(root)} | {tree.balance(root)}'
-        # else:
-        #     global hinted
-        #     if not hinted:
-        #         print("Hint: it will probably be helpful to define functions in tree.py for getting the height of a node and its balance factor!")
-        #         hinted = True
-        #     label = f'{str(root.key)}'
-
         label = f'{str(root.key)}'
         
         graph.add_node(PydotNode(str(root.key), shape='oval', color='white', fontcolor='white', label=label))
