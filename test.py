@@ -1,7 +1,6 @@
-import tree
-from tree import *
-import pydot_graph_util
-from pydot_graph_util import *
+import TreeItems.tree as tree
+from TreeItems.tree import *
+from Utility.pydot_graph_util import *
 
 # bunch of tree models below and then test functions
 
