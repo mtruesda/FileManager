@@ -1,8 +1,5 @@
-import TreeItems.tree as tree
-from TreeItems.tree import *
+from TreeItems.SplayTree import *
 from Utility.pydot_graph_util import *
-
-# bunch of tree models below and then test functions
 
 # base tree
 tree = load_tree("""{"k": 10, "l": {"k": 5, "l": null, "r": null}, "r": {"k": 15, "l": null, "r": null}}""")
@@ -44,30 +41,14 @@ example_tree = load_tree("""{"k": 30, "l": {"k": 10, "l": null, "r": null},
                                                                    "l": {"k": 55, "l": null, "r": null},
                                                                    "r": null}}}""")
 
-def testBuildTree():
-    testEmptyTree = None
-    modTree = insert(testEmptyTree,30)
-    modTree = insert(modTree, 10)
-    modTree = insert(modTree, 40)
-    modTree = insert(modTree, 35)
-    modTree = insert(modTree, 36)
-    modTree = delete(modTree, 30)
-    construct_graph(modTree).write_png('modTree.png')
+def printTrees():
+    construct_graph(tree).write_png('Images/tree.png')
+    construct_graph(tree2).write_png('Images/tree2.png')
+    construct_graph(tree3).write_png('Images/tree3.png')
+    construct_graph(tree4).write_png('Images/tree4.png')
+    construct_graph(tree5).write_png('Images/tree5.png')
+    construct_graph(tree6).write_png('Images/tree6.png')
+    construct_graph(example_tree).write_png('Images/example_tree.png')
 
-def testTraversals():
-    construct_graph(example_tree).write_png('modified_tree.png')
-    lst = postorder(example_tree)
-    lst2 = preorder(example_tree)
-    ls3 = inorder(example_tree)
+printTrees()
     
-def testStringInstance():
-    emptyTree = None
-    emptyTree = insert(emptyTree, 'hello')
-    emptyTree = insert(emptyTree, 'world')
-    emptyTree = insert(emptyTree, 'a')
-    construct_graph(emptyTree).write_png('stringtest.png')
-    print(emptyTree)
-
-# call function
-testStringInstance()
-
