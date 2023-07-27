@@ -25,25 +25,98 @@ def left_rotate(node):
     root.left = node
     return root
 
-# uses rotate functions to rotate right right. Returns the new tree. Given the original root
-def left_zigzig(node):
-    node.left = right_rotate(node.left.left)
-    root = right_rotate(node.left)
-    return root
-
-# uses the rotate functions to rotate left left. Returns the new tree. Given the original root
 def right_zigzig(node):
-    node.right = right_rotate(node.right.right)
-    root = right_rotate(node.right)
-    return root
+    parent = node.left
+    node.left = parent.right
+    parent.right = node
+
+    return right_rotate(parent)
+
+def left_zigzig(node):
+    parent = node.right
+    node.right = parent.right
+    parent.right = node
+
+    return left_rotate(parent)
+
+def right_zigzag(node):
+    parent = node.left
+    node.left = parent.right
+    parent.right = node
+
+    return right_rotate(parent)
+
+def left_zigzag(node):
+    parent = node.right
+    node.right = parent.left
+    parent.left = node
+
+    return left_rotate(parent)
 
 def splay(root, key):
+    print('s(p)laying')
+    # if we have none we return none
     if not root:
         return None
-    if root.left and root.left.key == key:
-        return right_rotate(root.left)
-    elif root.right and root.right.key == key:
-        return left_rotate(root.right)
+    # if we found the key return the root
+    if key == root.key:
+        return root
+    
+    if key < root.key:
+        if not root.left:
+            return root
+
+        if key == root.left.key:
+            return right_rotate(root)
+
+        if key < root.left.key:
+            root.left.left = splay(root.left.left, key)
+            return right_zigzig(root)
+        else:
+            root.left.right = splay(root.left.right, key)
+            if not root.left.right:
+                return right_zigzig(root)
+            return left_zigzag(root)
+
+    else:
+        if not root.right:
+            return root
+
+        if key == root.right.key:
+            return left_rotate(root)
+
+        if key > root.right.key:
+            root.right.right = splay(root.right.right, key)
+            return left_zigzig(root)
+        else:
+            root.right.left = splay(root.right.left, key)
+            if not root.right.left:
+                return left_zigzig(root)
+            return right_zigzag(root)
+        
+def insert(root, key):
+    print("inserting")
+    root = splay(root, key)
+    if root.key == key:
+        raise RuntimeError('Duplicate values') # we will handle this later
+    new_root = Node(key, None, None)
+    if root.key < key:
+        new_root.left = root
+        new_root.right = root.right
+        root.right = None
+    elif root.key > key:
+        new_root.right = root
+        new_root.left = root.left
+        root.left = None
+    return new_root
+
+def delete(root, key):
+    print("deleting")
+
+# returns the key at the top after splaying the seeked key. That key will either be the seeked key or the nearest key
+def search(root, key):
+    root = splay(root, key)
+    return root.key
     
 
 # these three functions will return a list of nodes and I'll determine later how I want to parse that list

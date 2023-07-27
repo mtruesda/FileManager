@@ -4,7 +4,7 @@
 
 I'm wriitng a file manager that uses a modified version of a splay tree to effectively allow a user to access files in a way that can be considered more efficient. It's intended to be modeled after the Windows file manager that also uses a splay tree.
 
-I'm hoping that I can use the traversal functions to provide sections in my file manager such as a recents tab or a least recent tab. I'm also building additional features as I go.
+I'm hoping that I can use the traversal functions to provide sections in my file manager such as a recents tab and other important orders that I may want. I'm also building additional features as I go.
 
 I'm using Python because I have a lot of experiennce writing these sorts of projects in Python and I'm very comfortable with the modules that would be necessary to make something like this work well.
 
@@ -16,9 +16,9 @@ Something that recently came to mind was adjusting the paths entered into the tr
 
 ### Main.py
 
-Runs the program using the other files available in the directory.
+Runs the program using the other files available in the directory. This file makes use of Tkinter to put together the gui that represents the file manager.
 
-### tree.py
+### SplayTree.py
 
 Uses a splay tree to handle the file manager. This will allow me to put together a recents selection and a bunch of other folders relating to different traversal methods.
 
@@ -27,9 +27,8 @@ so that I can have an option to provide a more accurate recent and least recent 
 
 A big consideration when looking at what the keys of the nodes will look like is how to represent file locations. I'm currently planning to use filepaths.
 
-### gui.py
-
-This will be where the gui class is built. I'm considering building the class using tkinter and maybe making an attempt using another module like Kivy. The front end items will be contained here.
+*** Insert Function ***
+The insert function was modified from what is conventially done because I believed it to be more efficient and faster. I may change this later. But essentially the way my splay tree currently behaves--when you insert it splays BEFORE inserting, causing the root of the tree to be the nearest found ancestor which then gets accordingly made into the proper tree.
 
 ### FileManagement.py
 
@@ -47,6 +46,6 @@ This is where most of my testing will be housed and a lot of tree models to use 
 
 ## Using the File Manager
 
-### Files Folder
+### ManagedFiles Folder
 
-The files folder will be where the files that come up in the file manager will be. 
+This folder will be where the files that come up in the file manager will be.
