@@ -57,12 +57,12 @@ def zigzig(tree):
     construct_graph(tree3).write_png('Images/modified_tree3_2.png')
 
 def zigzag(tree):
-    tree5 = left_zigzag(tree)
-    construct_graph(tree5).write_png('Images/modified_tree5.png')
+    new_tree = left_zigzag(tree)
+    construct_graph(new_tree).write_png('Images/modified_tree5.png')
 
 def zigzag2(tree):
-    tree6 = right_zigzag(tree)
-    construct_graph(tree6).write_png('Images/modified_tree6.png')
+    new_tree = right_zigzag(tree)
+    construct_graph(new_tree).write_png('Images/modified_tree6.png')
 
 def splayTest(tree):
     test_tree = splay(tree, 57)
@@ -73,7 +73,7 @@ def searchTestFound(tree):
     construct_graph(tree).write_png('Images/modified_search.png')
 
 def searchTestNotFound(tree):
-    new_tree = search(tree, 65)
+    new_tree = search(tree, 59)
     construct_graph(tree).write_png('Images/modified_search_nf.png')
 
 def insertTreeTest(tree):
@@ -88,11 +88,23 @@ def insertTreeTest(tree):
     new_tree = insert(new_tree, 16)
     construct_graph(new_tree).write_png('Images/modified_insert_tree.png')
 
-#printTrees()
+def insertTreeTest2(tree):
+    new_tree = insertOld(tree, 30)
+    new_tree = insertOld(new_tree, 45)
+    new_tree = insertOld(new_tree, 10)
+    new_tree = insertOld(new_tree, 60)
+    new_tree = insertOld(new_tree, 16)
+    construct_graph(new_tree).write_png('Images/old_insert_tree.png')
+    for node in inorder(new_tree):
+        print(str(node.key))
+
+
+printTrees()
 #zigzig(tree3)
 #zigzag(tree5)
+#zigzag2(tree6)
 #splayTest(example_tree)
 #searchTestFound(example_tree)
-#searchTestNotFound(example_tree)
-insertTreeTest(tree2)
+searchTestNotFound(example_tree)
+#insertTreeTest2(tree2)
 

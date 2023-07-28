@@ -26,98 +26,75 @@ def left_rotate(node):
     return root
 
 def right_zigzig(node):
-    parent = node.left
-    node.left = parent.right
-    parent.right = node
-
-    return right_rotate(parent)
+    node.left = right_rotate(node.right)
+    return right_rotate(node)
 
 def left_zigzig(node):
-    parent = node.right
-    node.right = parent.right
-    parent.right = node
-
-    return left_rotate(parent)
-
-def right_zigzag(node):
-    parent = node.left
-    node.left = parent.right
-    parent.right = node
-
-    return right_rotate(parent)
+    node.right = left_rotate(node.right)
+    return left_rotate(node)
 
 def left_zigzag(node):
-    parent = node.right
-    node.right = parent.left
-    parent.left = node
+    node.left = left_rotate(node.left)
+    return right_rotate(node)
 
-    return left_rotate(parent)
+def right_zigzag(node):
+    node.right = right_rotate(node.right)
+    return left_rotate(node)
+
+# I have spent an unholy amount of time trying to figure out this function.
+# this should not have taken *nearly* as long as it has and I am honestly contemplating three terrible options
+# The first choice--which I'll add in here--is to make the function so that it finds the point where it drops out and then
+# reruns splay in its entirety. This function will be inefficient for the reason that it will run through the tree multiple times
+# The second option is to somehow make the function such that it will go until it reaches an endpoint and then splay that last known node.
+# The third and final option is to scratch the idea of splaying an unknown node altogether and implement search using a BST approach.
+# The first and third are the laziest options.
 
 def splay(root, key):
-    print('s(p)laying')
-    # if we have none we return none
-    if not root:
-        return None
-    # if we found the key return the root
-    if key == root.key:
+    # Base case: if the root is None or the root contains the key, return the root
+    if root is None or root.key == key:
         return root
-    
+
+    # Zig: key is in the left subtree of the root
     if key < root.key:
-        if not root.left:
+        if root.left is None:
             return root
-
-        if key == root.left.key:
-            return right_rotate(root)
-
+        # Zig-Zig: key is in the left-left subtree
         if key < root.left.key:
             root.left.left = splay(root.left.left, key)
-            return right_zigzig(root)
-        else:
+            root = right_zigzig(root)
+        # Zig-Zag: key is in the left-right subtree
+        elif key > root.left.key:
             root.left.right = splay(root.left.right, key)
-            if not root.left.right:
-                return right_zigzig(root)
-            return left_zigzag(root)
+            root = left_zigzag(root)
+        return right_rotate(root)
 
-    else:
-        if not root.right:
+    # Zig: key is in the right subtree of the root
+    elif key > root.key:
+        if root.right is None:
             return root
-
-        if key == root.right.key:
-            return left_rotate(root)
-
+        # Zig-Zig: key is in the right-right subtree
         if key > root.right.key:
             root.right.right = splay(root.right.right, key)
-            return left_zigzig(root)
-        else:
+            root = left_zigzig(root)
+        # Zig-Zag: key is in the right-left subtree
+        elif key < root.right.key:
             root.right.left = splay(root.right.left, key)
-            if not root.right.left:
-                return left_zigzig(root)
-            return right_zigzag(root)
-        
-def insert(root, key):
-    print("inserting")
-    root = splay(root, key)
-    if root.key == key:
-        raise RuntimeError('Duplicate values') # we will handle this later
-    new_root = Node(key, None, None)
-    if root.key < key:
-        new_root.left = root
-        new_root.right = root.right
-        root.right = None
-    elif root.key > key:
-        new_root.right = root
-        new_root.left = root.left
-        root.left = None
-    return new_root
+            root = right_zigzag(root)
+        return left_rotate(root)
 
-def delete(root, key):
-    print("deleting")
+    return root  # If the key is found at the root, no need to splay
+
 
 # returns the key at the top after splaying the seeked key. That key will either be the seeked key or the nearest key
-def search(root, key):
-    root = splay(root, key)
-    return root.key
+# the question will be if I want the search function to modify the tree. I'm leaning no but I'll leave the following commented here
+# def search(root, key):
+#     root = splay(root, key)
+#     return root.key
     
+# other search function -- returns nearest key without modification
+def search(root, key):
+    return splay(root, key).key
+
 
 # these three functions will return a list of nodes and I'll determine later how I want to parse that list
 # may consider adding balance to the tree to see more accurate distance results
