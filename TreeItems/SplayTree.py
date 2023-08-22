@@ -8,7 +8,8 @@ class Node():
         self.right = right
     def __str__(self):
         return self.key
-    
+
+# ----------------------------------------------------------------
 # takes in the root node to the rotated right and returns the new tree
 # zig
 def right_rotate(node):
@@ -25,20 +26,47 @@ def left_rotate(node):
     root.left = node
     return root
 
+# def right_zigzig(node):
+#     node.left = right_rotate(node.right)
+#     return right_rotate(node)
+
+# def left_zigzig(node):
+#     node.right = left_rotate(node.right)
+#     return left_rotate(node)
+
+# def left_zigzag(node):
+#     node.left = left_rotate(node.left)
+#     return right_rotate(node)
+
+# def right_zigzag(node):
+#     node.right = right_rotate(node.right)
+#     return left_rotate(node)
+#----------------------------------------------------------------
+
+# Zig-Zig: right_zigzig
 def right_zigzig(node):
-    node.left = right_rotate(node.right)
-    return right_rotate(node)
+    child = node.left
+    node.left = child.right
+    child.right = right_rotate(node)
+    return right_rotate(child)
 
+# Zig-Zig: left_zigzig
 def left_zigzig(node):
-    node.right = left_rotate(node.right)
-    return left_rotate(node)
+    child = node.right
+    node.right = child.left
+    child.left = left_rotate(node)
+    return left_rotate(child)
 
+# Zig-Zag: left_zigzag
 def left_zigzag(node):
-    node.left = left_rotate(node.left)
+    child = node.left
+    node.left = left_rotate(child)
     return right_rotate(node)
 
+# Zig-Zag: right_zigzag
 def right_zigzag(node):
-    node.right = right_rotate(node.right)
+    child = node.right
+    node.right = right_rotate(child)
     return left_rotate(node)
 
 # I have spent an unholy amount of time trying to figure out this function.
@@ -50,50 +78,42 @@ def right_zigzag(node):
 # The first and third are the laziest options.
 
 def splay(root, key):
-    # Base case: if the root is None or the root contains the key, return the root
-    if root is None or root.key == key:
-        return root
-
-    # Zig: key is in the left subtree of the root
+    if root is None:
+        return None
+    # Check if the key is in the left subtree
     if key < root.key:
         if root.left is None:
             return root
-        # Zig-Zig: key is in the left-left subtree
+        # Case (a): x is the root's child
         if key < root.left.key:
             root.left.left = splay(root.left.left, key)
-            root = right_zigzig(root)
-        # Zig-Zag: key is in the left-right subtree
+            root = right_rotate(root)
+        # Case (c): x is a left-right child
         elif key > root.left.key:
             root.left.right = splay(root.left.right, key)
-            root = left_zigzag(root)
-        return right_rotate(root)
-
-    # Zig: key is in the right subtree of the root
+            if root.left.right is not None:
+                root.left = left_rotate(root.left)
+        return root if root.left is None else right_rotate(root)
+    # Check if the key is in the right subtree
     elif key > root.key:
         if root.right is None:
             return root
-        # Zig-Zig: key is in the right-right subtree
-        if key > root.right.key:
-            root.right.right = splay(root.right.right, key)
-            root = left_zigzig(root)
-        # Zig-Zag: key is in the right-left subtree
-        elif key < root.right.key:
+        # Case (a): x is the root's child
+        if key < root.right.key:
             root.right.left = splay(root.right.left, key)
-            root = right_zigzag(root)
-        return left_rotate(root)
+            if root.right.left is not None:
+                root.right = right_rotate(root.right)
+        # Case (c): x is a right-left child
+        elif key > root.right.key:
+            root.right.right = splay(root.right.right, key)
+            root = left_rotate(root)
+        return root if root.right is None else left_rotate(root)
+    # Key is found at the current root, return the root
+    return root
 
-    return root  # If the key is found at the root, no need to splay
-
-
-# returns the key at the top after splaying the seeked key. That key will either be the seeked key or the nearest key
-# the question will be if I want the search function to modify the tree. I'm leaning no but I'll leave the following commented here
-# def search(root, key):
-#     root = splay(root, key)
-#     return root.key
-    
-# other search function -- returns nearest key without modification
-def search(root, key):
-    return splay(root, key).key
+def search(tree, key):
+    tree = splay(tree, key)
+    return tree
 
 
 # these three functions will return a list of nodes and I'll determine later how I want to parse that list

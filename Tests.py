@@ -74,7 +74,8 @@ def searchTestFound(tree):
 
 def searchTestNotFound(tree):
     new_tree = search(tree, 59)
-    construct_graph(tree).write_png('Images/modified_search_nf.png')
+    print(new_tree.key)
+    construct_graph(new_tree).write_png('Images/modified_search_nf.png')
 
 def insertTreeTest(tree):
     new_tree = insert(tree, 30)
