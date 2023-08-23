@@ -1,5 +1,5 @@
 from TreeItems.SplayTree import *
-from Utility.pydot_graph_util import *
+from pydot_graph_util import *
 
 # base tree
 tree = load_tree("""{"k": 10, "l": {"k": 5, "l": null, "r": null}, "r": {"k": 15, "l": null, "r": null}}""")

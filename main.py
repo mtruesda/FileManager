@@ -1,7 +1,7 @@
 import os
 import tkinter as tk
-from Utility.FileManagement import *
-from Utility.pydot_graph_util import *
+from FileManagement import *
+from pydot_graph_util import *
 from TreeItems.SplayTree import *
 
 def treeBuilder(path, tree):

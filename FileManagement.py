@@ -1,5 +1,5 @@
 import sys, subprocess, re, os, shutil
-from TreeItems.tree import *
+from TreeItems.SplayTree import *
 
 # this does work. I may want to manually change what application it uses. currently just uses the default
 def open_file(path):
