@@ -1,5 +1,6 @@
 from TreeItems.SplayTree import *
 from pydot_graph_util import *
+import copy
 
 # base tree
 tree = load_tree("""{"k": 10, "l": {"k": 5, "l": null, "r": null}, "r": {"k": 15, "l": null, "r": null}}""")
@@ -78,27 +79,42 @@ def searchTestNotFound(tree):
     construct_graph(new_tree).write_png('Images/modified_search_nf.png')
 
 def insertTreeTest(tree):
-    new_tree = insert(tree, 30)
+    new_tree = insert1(tree, 30)
     construct_graph(new_tree).write_png('Images/modified_insert_tree.png')
-    new_tree = insert(new_tree, 45)
+    new_tree = insert1(new_tree, 45)
     construct_graph(new_tree).write_png('Images/modified_insert_tree.png')
-    new_tree = insert(new_tree, 10)
+    new_tree = insert1(new_tree, 10)
     construct_graph(new_tree).write_png('Images/modified_insert_tree.png')
-    new_tree = insert(new_tree, 60)
+    new_tree = insert1(new_tree, 60)
     construct_graph(new_tree).write_png('Images/modified_insert_tree.png')
-    new_tree = insert(new_tree, 16)
+    new_tree = insert1(new_tree, 16)
     construct_graph(new_tree).write_png('Images/modified_insert_tree.png')
 
 def insertTreeTest2(tree):
-    new_tree = insertOld(tree, 30)
-    new_tree = insertOld(new_tree, 45)
-    new_tree = insertOld(new_tree, 10)
-    new_tree = insertOld(new_tree, 60)
-    new_tree = insertOld(new_tree, 16)
+    new_tree = insert1(tree, 30)
+    new_tree = insert1(new_tree, 45)
+    new_tree = insert1(new_tree, 10)
+    new_tree = insert1(new_tree, 60)
+    new_tree = insert1(new_tree, 16)
     construct_graph(new_tree).write_png('Images/old_insert_tree.png')
-    for node in inorder(new_tree):
-        print(str(node.key))
 
+def insertTreeTest3():
+    new_tree = copy.deepcopy(tree2)
+    new_tree = insert1(new_tree, 30)
+    new_tree = insert1(new_tree, 45)
+    new_tree = insert1(new_tree, 10)
+    new_tree = insert1(new_tree, 60)
+    new_tree = insert1(new_tree, 16)
+    construct_graph(new_tree).write_png('Images/insert_tree_3.png')
+
+def insertTreeTest4():
+    new_tree = copy.deepcopy(tree2)
+    new_tree = insert2(new_tree, 30)
+    new_tree = insert2(new_tree, 45)
+    new_tree = insert2(new_tree, 10)
+    new_tree = insert2(new_tree, 60)
+    new_tree = insert2(new_tree, 16)
+    construct_graph(new_tree).write_png('Images/insert_tree_4.png')
 
 printTrees()
 #zigzig(tree3)
@@ -106,6 +122,9 @@ printTrees()
 #zigzag2(tree6)
 #splayTest(example_tree)
 #searchTestFound(example_tree)
-searchTestNotFound(example_tree)
+#searchTestNotFound(example_tree)
+#insertTreeTest(tree2)
 #insertTreeTest2(tree2)
+insertTreeTest3() # compare result with following line
+insertTreeTest4()
 

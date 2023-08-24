@@ -22,13 +22,9 @@ Runs the program using the other files available in the directory. This file mak
 
 Uses a splay tree to handle the file manager. This will allow me to put together a recents selection and a bunch of other folders relating to different traversal methods.
 
-As I go along, I have been finding random ways to improve my file manager. I've been considering adding balance to the tree
-so that I can have an option to provide a more accurate recent and least recent section of my file manager. 
+As I go along, I have been finding random ways to improve my file manager. I've decided to take a BST approach with insertion because it results in something that allows the user to get a better and more accurate representation of a recents section when doing traversal.
 
 A big consideration when looking at what the keys of the nodes will look like is how to represent file locations. I'm currently planning to use filepaths.
-
-*** Insert Function ***
-The insert function was modified from what is conventially done because I believed it to be more efficient and faster. I may change this later. But essentially the way my splay tree currently behaves--when you insert it splays BEFORE inserting, causing the root of the tree to be the nearest found ancestor which then gets accordingly made into the proper tree.
 
 ### FileManagement.py
 

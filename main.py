@@ -14,13 +14,13 @@ def treeBuilder(path, tree):
     for name in os.listdir(path):
         new_path = path + '/' + name
         if not os.path.isdir(new_path):
-            tree = insert(tree, path + '/' + name)
+            tree = insert1(tree, path + '/' + name)
     return tree
 
 def fill_listbox(path):
     listbox.delete(0, tk.END)
     for name in os.listdir(path):
-        listbox.insert(tk.END, name)
+        listbox.insert1(tk.END, name)
 
 def on_close():
     # file = open('TreeItems/TreeStorage.txt', 'w') 

@@ -115,6 +115,56 @@ def search(tree, key):
     tree = splay(tree, key)
     return tree
 
+def search_bst(tree, key):
+    if not tree:
+        raise ValueError("Key not foundin tree")
+    if tree.key < key:
+        return search_bst(tree.right, key)
+    elif tree.key > key:
+        return search_bst(tree.left, key)
+    else:
+        return tree
+
+# this is the way the professor showed us, however I think it doesn't do a great job of maintaining the recent
+# items at the top of the tree, defeating the purpose of the splay.
+def insert1(tree, key):
+    new_tree = splay(tree, key)
+    new_node = Node(key, None, None)
+    if new_tree.key == key:
+        raise ValueError("Key already exists") # may need to be changed to more agreeable code
+        # return new_tree
+    elif new_tree.key < key:
+        new_node.right = new_tree.right
+        new_tree.right = None
+        new_node.left = new_tree
+    elif new_tree.key > key:
+        new_node.left = new_tree.left
+        new_tree.left = None
+        new_node.right = new_tree
+    return new_node
+
+# BST version. Probably a little slower than the version above but I think it actually does a better job of maintaining the most recent items
+# at the top of the tree 🤔
+def insert2(tree, key):
+    if tree == None or tree.key == key:
+        raise ValueError("Something went wrong")
+    elif key < tree.key:
+        if tree.left:
+            tree.left = insert2(tree.left, key)
+        else:
+             tree.left = Node(key, None, None)
+    elif key > tree.key:
+        if tree.right:
+            tree.right = insert2(tree.right, key)
+        else:
+            tree.right = Node(key, None, None)
+
+    return splay(tree, key)
+
+
+def delete(tree, key):
+    return None
+
 
 # these three functions will return a list of nodes and I'll determine later how I want to parse that list
 # may consider adding balance to the tree to see more accurate distance results
