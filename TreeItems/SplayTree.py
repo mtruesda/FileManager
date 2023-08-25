@@ -10,52 +10,26 @@ class Node():
         return self.key
 
 # ----------------------------------------------------------------
-# takes in the root node to the rotated right and returns the new tree
-# zig
-def right_rotate(node):
-    root = node.left
-    node.left = root.right
-    root.right = node
-    return root
 
-# takes in the root node to be rotated left and returns the new tree
-# zig
 def left_rotate(node):
-    root = node.right
-    node.right = root.left
-    root.left = node
-    return root
+    new_root = node.right
+    node.right = new_root.left
+    new_root.left = node
+    return new_root
 
-# def right_zigzig(node):
-#     node.left = right_rotate(node.right)
-#     return right_rotate(node)
+def right_rotate(node):
+    new_root = node.left
+    node.left = new_root.right
+    new_root.right = node
+    return new_root
 
-# def left_zigzig(node):
-#     node.right = left_rotate(node.right)
-#     return left_rotate(node)
-
-# def left_zigzag(node):
-#     node.left = left_rotate(node.left)
-#     return right_rotate(node)
-
-# def right_zigzag(node):
-#     node.right = right_rotate(node.right)
-#     return left_rotate(node)
-#----------------------------------------------------------------
-
-# Zig-Zig: right_zigzig
 def right_zigzig(node):
-    child = node.left
-    node.left = child.right
-    child.right = right_rotate(node)
-    return right_rotate(child)
+    root = right_rotate(node)
+    return right_rotate(root)
 
-# Zig-Zig: left_zigzig
 def left_zigzig(node):
-    child = node.right
-    node.right = child.left
-    child.left = left_rotate(node)
-    return left_rotate(child)
+    root = left_rotate(node)
+    return left_rotate(root)
 
 # Zig-Zag: left_zigzag
 def left_zigzag(node):
@@ -69,65 +43,46 @@ def right_zigzag(node):
     node.right = right_rotate(child)
     return left_rotate(node)
 
-# I have spent an unholy amount of time trying to figure out this function.
-# this should not have taken *nearly* as long as it has and I am honestly contemplating three terrible options
-# The first choice--which I'll add in here--is to make the function so that it finds the point where it drops out and then
-# reruns splay in its entirety. This function will be inefficient for the reason that it will run through the tree multiple times
-# The second option is to somehow make the function such that it will go until it reaches an endpoint and then splay that last known node.
-# The third and final option is to scratch the idea of splaying an unknown node altogether and implement search using a BST approach.
-# The first and third are the laziest options.
+# ----------------------------------------------------------------
 
 def splay(root, key):
-    if root is None:
+    if not root:
         return None
-    # Check if the key is in the left subtree
     if key < root.key:
-        if root.left is None:
+        if not root.left:
             return root
-        # Case (a): x is the root's child
-        if key < root.left.key:
+        if key < root.left.key and root.left.left and root.left.left.key == key:
             root.left.left = splay(root.left.left, key)
-            root = right_rotate(root)
-        # Case (c): x is a left-right child
-        elif key > root.left.key:
+            if root.left.left:
+                root = right_zigzig(root)
+        elif key > root.left.key: # and root.left.right and root.left.right.key == key:
             root.left.right = splay(root.left.right, key)
-            if root.left.right is not None:
-                root.left = left_rotate(root.left)
-        return root if root.left is None else right_rotate(root)
-    # Check if the key is in the right subtree
+            if root.left.right:
+                 root = left_zigzag(root)
+        else:
+            root.left = splay(root.left, key)
+            root = right_rotate(root)
     elif key > root.key:
-        if root.right is None:
+        if not root.right:
             return root
-        # Case (a): x is the root's child
-        if key < root.right.key:
-            root.right.left = splay(root.right.left, key)
-            if root.right.left is not None:
-                root.right = right_rotate(root.right)
-        # Case (c): x is a right-left child
-        elif key > root.right.key:
+        if key > root.right.key and root.right.right and root.right.right.key == key:
             root.right.right = splay(root.right.right, key)
+            if root.right.right:
+                root = left_zigzig(root)
+        elif key < root.right.key: #and root.right.left and root.right.left.key == key:
+            root.right.left = splay(root.right.left, key)
+            if root.right.left:
+                root = right_zigzag(root)
+        else:
+            root.left = splay(root.left, key)
             root = left_rotate(root)
-        return root if root.right is None else left_rotate(root)
-    # Key is found at the current root, return the root
     return root
 
-def search(tree, key):
-    tree = splay(tree, key)
-    return tree
-
-def search_bst(tree, key):
-    if not tree:
-        raise ValueError("Key not foundin tree")
-    if tree.key < key:
-        return search_bst(tree.right, key)
-    elif tree.key > key:
-        return search_bst(tree.left, key)
-    else:
-        return tree
+# ----------------------------------------------------------------
 
 # this is the way the professor showed us, however I think it doesn't do a great job of maintaining the recent
 # items at the top of the tree, defeating the purpose of the splay.
-def insert1(tree, key):
+def insertAfter(tree, key):
     new_tree = splay(tree, key)
     new_node = Node(key, None, None)
     if new_tree.key == key:
@@ -143,28 +98,44 @@ def insert1(tree, key):
         new_node.right = new_tree
     return new_node
 
-# BST version. Probably a little slower than the version above but I think it actually does a better job of maintaining the most recent items
-# at the top of the tree 🤔
-def insert2(tree, key):
-    if tree == None or tree.key == key:
-        raise ValueError("Something went wrong")
+# performs the insertion for the BST insertion function
+def performInsert(tree, key):
+    if tree == None or tree.key == key:          # remove the == piece to fix below *** fix
+        raise ValueError("Something went wrong") # adjust such that it just splays this item
     elif key < tree.key:
         if tree.left:
-            tree.left = insert2(tree.left, key)
+            tree.left = performInsert(tree.left, key)
         else:
-             tree.left = Node(key, None, None)
+            tree.left = Node(key, None, None)
     elif key > tree.key:
         if tree.right:
-            tree.right = insert2(tree.right, key)
+            tree.right = performInsert(tree.right, key)
         else:
             tree.right = Node(key, None, None)
+    return tree
 
-    return splay(tree, key)
+# BST version. Probably a little slower than the version above but I think it actually does a better job of maintaining the most recent items
+# at the top of the tree 🤔
+def insertBST(tree, key):
+    tree = performInsert(tree, key) # performs the actual insertion of the new node
+    return splay(tree, key)         # returns the splayed tree with the new node at the root
 
-
+# uses deletion method put together by Justin
+# splays right tree and uses it
 def delete(tree, key):
-    return None
+    mod_tree = splay(tree, key)
+    if not mod_tree.left:
+        return mod_tree.right
+    elif not mod_tree.right:
+        return mod_tree.left
+    else:
+        child_tree = splay(tree.right, key)
+        child_tree.left = tree.left
+        return child_tree
 
+def search(tree, key):
+    new_tree = splay(tree, key)
+    return new_tree
 
 # these three functions will return a list of nodes and I'll determine later how I want to parse that list
 # may consider adding balance to the tree to see more accurate distance results

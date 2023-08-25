@@ -42,6 +42,34 @@ example_tree = load_tree("""{"k": 30, "l": {"k": 10, "l": null, "r": null},
                                                                    "l": {"k": 55, "l": null, 
                                                                                   "r": {"k": 57, "l": null, "r": null}},
                                                                    "r": null}}}""")
+
+example_tree2 = load_tree("""{"k": 30, "l": {"k": 10, "l": null, "r": null}, 
+                                      "r": {"k": 50, "l": null, 
+                                                     "r": {"k": 59, 
+                                                                   "l": {"k": 57, "l": {"k": 55, "l": null, "r": null}, 
+                                                                                  "r": null},
+                                                                   "r": {"k": 60, "l": null, "r": null}}}}""")
+
+example_tree3 = load_tree("""{"k": 59, 
+                                    "l": {"k": 57, 
+                                                "l": {"k": 50, 
+                                                            "l": {"k": 30, 
+                                                                        "l": {"k": 10, "l": null, "r": null}, 
+                                                                        "r": null},
+                                                            "r": {"k": 55, "l": null, "r": null}
+                                                }, 
+                                                "r": null},
+                                    "r": {"k": 60, "l": null, "r": null}
+                            }
+                        """)
+
+example_tree4 = load_tree("""{"k": 30, "l": {"k": 10, "l": null, "r": null}, 
+                                "r": {"k": 59, 
+                                   "l": {"k": 50, "l": null, "r": {"k": 57, "l": {"k": 55, "l": null, "r": null}, "r": null}},
+                                   "r": {"k": 60, "l": null, "r": null}}
+                          }""")
+
+
 def printTrees():
     construct_graph(tree).write_png('Images/tree.png')
     construct_graph(tree2).write_png('Images/tree2.png')
@@ -50,6 +78,9 @@ def printTrees():
     construct_graph(tree5).write_png('Images/tree5.png')
     construct_graph(tree6).write_png('Images/tree6.png')
     construct_graph(example_tree).write_png('Images/example_tree.png')
+    construct_graph(example_tree2).write_png('Images/example_tree2.png')
+    construct_graph(example_tree3).write_png('Images/example_tree3.png')
+    construct_graph(example_tree4).write_png('Images/example_tree4.png')
 
 def zigzig(tree):
     tree3 = right_zigzig(tree)
@@ -79,42 +110,61 @@ def searchTestNotFound(tree):
     construct_graph(new_tree).write_png('Images/modified_search_nf.png')
 
 def insertTreeTest(tree):
-    new_tree = insert1(tree, 30)
-    construct_graph(new_tree).write_png('Images/modified_insert_tree.png')
-    new_tree = insert1(new_tree, 45)
-    construct_graph(new_tree).write_png('Images/modified_insert_tree.png')
-    new_tree = insert1(new_tree, 10)
-    construct_graph(new_tree).write_png('Images/modified_insert_tree.png')
-    new_tree = insert1(new_tree, 60)
-    construct_graph(new_tree).write_png('Images/modified_insert_tree.png')
-    new_tree = insert1(new_tree, 16)
+    new_tree = insertBST(tree, 30)
+    new_tree = insertBST(new_tree, 45)
+    new_tree = insertBST(new_tree, 10)
+    new_tree = insertBST(new_tree, 60)
+    new_tree = insertBST(new_tree, 16)
+    new_tree = insertBST(new_tree, 40)
+    new_tree = insertBST(new_tree, 35)
+
     construct_graph(new_tree).write_png('Images/modified_insert_tree.png')
 
 def insertTreeTest2(tree):
-    new_tree = insert1(tree, 30)
-    new_tree = insert1(new_tree, 45)
-    new_tree = insert1(new_tree, 10)
-    new_tree = insert1(new_tree, 60)
-    new_tree = insert1(new_tree, 16)
+    new_tree = insertAfter(tree, 30)
+    new_tree = insertAfter(new_tree, 45)
+    new_tree = insertAfter(new_tree, 10)
+    new_tree = insertAfter(new_tree, 60)
+    new_tree = insertAfter(new_tree, 16)
     construct_graph(new_tree).write_png('Images/old_insert_tree.png')
 
 def insertTreeTest3():
     new_tree = copy.deepcopy(tree2)
-    new_tree = insert1(new_tree, 30)
-    new_tree = insert1(new_tree, 45)
-    new_tree = insert1(new_tree, 10)
-    new_tree = insert1(new_tree, 60)
-    new_tree = insert1(new_tree, 16)
+    new_tree = insertAfter(new_tree, 30)
+    new_tree = insertAfter(new_tree, 45)
+    new_tree = insertAfter(new_tree, 10)
+    new_tree = insertAfter(new_tree, 60)
+    new_tree = insertAfter(new_tree, 16)
     construct_graph(new_tree).write_png('Images/insert_tree_3.png')
 
 def insertTreeTest4():
     new_tree = copy.deepcopy(tree2)
-    new_tree = insert2(new_tree, 30)
-    new_tree = insert2(new_tree, 45)
-    new_tree = insert2(new_tree, 10)
-    new_tree = insert2(new_tree, 60)
-    new_tree = insert2(new_tree, 16)
+    new_tree = insertBST(new_tree, 30)
+    new_tree = insertBST(new_tree, 45)
+    new_tree = insertBST(new_tree, 10)
+    new_tree = insertBST(new_tree, 60)
+    new_tree = insertBST(new_tree, 16)
     construct_graph(new_tree).write_png('Images/insert_tree_4.png')
+
+def deleteTreeTest():
+    modded_tree = copy.deepcopy(example_tree3)
+    print_tree = copy.deepcopy(example_tree3)
+    construct_graph(splay(print_tree, 30)).write_png('Images/checker.png')
+    modded_tree = delete(modded_tree, 30)
+    construct_graph(modded_tree).write_png('Images/delete_tree.png')
+
+def newerSplayTest():
+    tree1_ = copy.deepcopy(tree)
+    tree2_ = copy.deepcopy(tree3)
+    tree3_ = copy.deepcopy(tree6)
+
+    tree1_ = splay(tree1_, 5)
+    tree2_ = splay(tree2_, 5)
+    tree3_ = splay(tree3_, 40)
+
+    construct_graph(tree1_).write_png('Images/splayTree1.png')
+    construct_graph(tree2_).write_png('Images/splayTree2.png')
+    construct_graph(tree3_).write_png('Images/splayTree3.png')
 
 printTrees()
 #zigzig(tree3)
@@ -123,8 +173,9 @@ printTrees()
 #splayTest(example_tree)
 #searchTestFound(example_tree)
 #searchTestNotFound(example_tree)
-#insertTreeTest(tree2)
+insertTreeTest(tree2)
 #insertTreeTest2(tree2)
-insertTreeTest3() # compare result with following line
-insertTreeTest4()
-
+#insertTreeTest3() # compare result with following line
+#insertTreeTest4()
+#deleteTreeTest()
+#newerSplayTest()
