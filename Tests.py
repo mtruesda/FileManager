@@ -115,8 +115,8 @@ def insertTreeTest(tree):
     new_tree = insertBST(new_tree, 10)
     new_tree = insertBST(new_tree, 60)
     new_tree = insertBST(new_tree, 16)
-    new_tree = insertBST(new_tree, 40)
-    new_tree = insertBST(new_tree, 35)
+    #new_tree = insertBST(new_tree, 40)
+    #new_tree = insertBST(new_tree, 35)
 
     construct_graph(new_tree).write_png('Images/modified_insert_tree.png')
 
