@@ -73,8 +73,8 @@ def zigZigTest():
     simpRight.zigzig(simpRight.root.left.left)
     simpLeft.zigzig(simpLeft.root.right.right)
 
-    construct_graph(simpRight.root).write_png('Images/ZigZigTest/simpRight.png')
-    construct_graph(simpLeft.root).write_png('Images/ZigZigTest/simpLeft.png')
+    construct_graph(simpRight.root).write_png('Images/ZigZigTest/simpRightZI.png')
+    construct_graph(simpLeft.root).write_png('Images/ZigZigTest/simpLeftZI.png')
 
     # Complicated or "full" trees
     compRight = copy.deepcopy(gpt_tree2)
@@ -83,16 +83,44 @@ def zigZigTest():
     compRight.zigzig(compRight.root.left.left)
     compLeft.zigzig(compLeft.root.right.right)
 
-    construct_graph(compRight.root).write_png('Images/ZigZigTest/compRight.png')
-    construct_graph(compLeft.root).write_png('Images/ZigZigTest/compLeft.png')
+    construct_graph(compRight.root).write_png('Images/ZigZigTest/compRightZI.png')
+    construct_graph(compLeft.root).write_png('Images/ZigZigTest/compLeftZI.png')
 
 def zigZagTest():
-    return None
+    # simple test cases
+    simpRight = copy.deepcopy(gpt_tree)
+    simpLeft = copy.deepcopy(gpt_tree)
 
-def insertTest():
-    return None
+    simpRight.zigzag(simpRight.root.left.right)
+    simpLeft.zigzag(simpLeft.root.right.left)
 
-def deleteTest():
+    construct_graph(simpRight.root).write_png('Images/ZigZagTest/simpRightZA.png')
+    construct_graph(simpLeft.root).write_png('Images/ZigZagTest/simpLeftZA.png')
+
+    # fuller tree test cases
+    compRight = copy.deepcopy(gpt_tree3)
+    compLeft = copy.deepcopy(gpt_tree3)
+
+    compRight.zigzag(compRight.root.left.right) # this test will see if children move proper
+    compLeft.zigzag(compLeft.root.left.left.right) # this test will see if it brings it up proper
+
+    construct_graph(compRight.root).write_png('Images/ZigZagTest/compRightZA.png')
+    construct_graph(compLeft.root).write_png('Images/ZigZagTest/compLeftZA.png')
+
+def insertTest(): # am just going to insert a ton to the tree
+    tree2.insert(10)
+    tree2.insert(30)
+    tree2.insert(60)
+    tree2.insert(35)
+    tree2.insert(16)
+    tree2.insert(24)
+    tree2.insert(31)
+    construct_graph(tree2.root).write_png('Images/InsertTest/insertTest.png')
+    # insert already existing node--looking to see it splay the node but not add another
+    tree2.insert(16)
+    construct_graph(tree2.root).write_png('Images/InsertTest/insertTest2.png')
+
+def deleteTest(): # am going to delete some from the previous tree
     return None
 
 def splayTest():
@@ -118,5 +146,7 @@ def postorderTest():
 
 # produces all the graphs from the visualizer in the images directory.
 printTrees()
-zigTest()
-zigZigTest()
+#zigTest()
+#zigZigTest()
+#zigZagTest()
+insertTest()
