@@ -14,44 +14,43 @@ def open_file(path):
             print('Linux')
             subprocess.Popen(['xdg-open', path])
         else:
-            return 'confused'
+            return 'unsupported platform...?'
     except FileNotFoundError:
-        print('unknown file')
+        print('File not found')
     except Exception as e:
         print('Error ', str(e), ' occurred')
-
-def fileDeterminer(string):
-    # Match the string against a pattern that checks for the presence of an extension
-    pattern = r".+\..+$"  # Matches strings with at least one character before a dot and at least one character after the dot
-    match = re.match(pattern, string)
     
-    if match:
-        return "File"
-    else:
-        return "Folder"
+def fileDeterminer(string):
+    pattern = r".+\..+$" # Match the string against a pattern that checks for the presence of an extension
+    match = re.match(pattern, string) # Matches strings with at least one character before a dot and at least one character after the dot
+    return "File" if match else "Folder"
     
 def create_file(path, filename, splayTree):
-    splayTree.insert(path + '/' + filename)
-    open(path + '/' + filename, 'w').close()
+    full_path = os.path.join(path, filename)
+    try:
+        with open(full_path, 'w') as f:
+            pass  # File is created and immediately closed
+        splayTree.insert(full_path)
+    except Exception as e:
+        print(f"An error occurred while creating the file: {e}")
+
 
 def create_folder(path, foldername, splayTree):
     os.makedirs(path + '/' + foldername)
-
+    
 def delete_path(path, splayTree):
-    if fileDeterminer(path) == 'File':
-        os.remove(path)
-        splayTree.delete(path)
-    elif fileDeterminer(path) == 'Folder':
-        file_list = os.listdir(path)
-        ## MAY RESULT IN ISSUES
-        for file in file_list:
-            splayTree.delete(file)
-        shutil.rmtree(path)
-    else:
-        raise RuntimeError("issue somewhere")
+    try:
+        if fileDeterminer(path) == 'File':
+            os.remove(path)
+            splayTree.delete(path)
+        else:
+            shutil.rmtree(path)
+            for root, dirs, files in os.walk(path):
+                for name in files:
+                    splayTree.delete(os.path.join(root, name))
+    except Exception as e:
+        print(f"An error occurred while deleting: {e}")
 
 # used to obtain the "home" directory for the project
 def home():
-    home_dir = os.getcwd()
-    home_dir += '/ManagedFiles'
-    return home_dir
+    return os.path.join(os.getcwd(), 'ManagedFiles')
