@@ -1,6 +1,6 @@
 from TreeItems.SplayTree import *
 from pydot_graph_util import *
-import copy
+import copy, unittest
 
 # Understand that I would use more unit testing here, but it would require me to paste and play with these json strings which are already annoying to write. They're not really here for me to actually type out.
 # it's much easier for me to run these functions and then compare the images that are produced using the visualizer file to an online splay tree calculator or do it by hand. I'm sure if I really wanted to I could just make the trees and then
@@ -27,7 +27,7 @@ example_tree4 = SplayTree(load_tree("""{"k": 30, "l": {"k": 10, "l": null, "r": 
 # gpt helped make these trees because these json strings are annoying to type out
 gpt_tree = SplayTree(load_tree("""{"k": 5, "l": {"k": 3, "l": {"k": 1, "l": null, "r": null}, "r": {"k": 4, "l": null, "r": null}}, "r": {"k": 7, "l": {"k": 6, "l": null, "r": null}, "r": {"k": 8, "l": null, "r": null}}}"""))
 gpt_tree2 = SplayTree(load_tree("""{"k": 5, "l": {"k": 3, "l": {"k": 1, "l": {"k": 0, "l": null, "r": null}, "r": {"k": 2, "l": null, "r": null}}, "r": {"k": 4, "l": null, "r": null}}, "r": {"k": 7, "l": {"k": 6, "l": null, "r": null}, "r": {"k": 8, "l": {"k": 9, "l": null, "r": null}, "r": null}}}"""))
-gpt_tree3 = SplayTree(load_tree("""{"k": 5, "l": {"k": 3, "l": {"k": 1, "l": {"k": 0, "l": {"k": -1, "l": null, "r": null}, "r": null}, "r": {"k": 2, "l": null, "r": {"k": 2.5, "l": null, "r": null}}}, "r": {"k": 4, "l": null, "r": null}}, "r": {"k": 7, "l": {"k": 6, "l": null, "r": null}, "r": {"k": 8, "l": {"k": 9, "l": null, "r": {"k": 10, "l": null, "r": null}}, "r": null}}}"""))
+gpt_tree3 = SplayTree(load_tree("""{"k": 5, "l": {"k": 3, "l": {"k": 1, "l": {"k": 0, "l": {"k": -1, "l": null, "r": null}, "r": null}, "r": {"k": 2, "l": null, "r": {"k": 2.5, "l": null, "r": null}}}, "r": {"k": 4, "l": null, "r": null}}, "r": {"k": 7, "l": {"k": 6, "l": null, "r": null}, "r": {"k": 8, "l": null, "r": {"k": 9, "l": null, "r": {"k": 10, "l": null, "r": null}}}}}"""))
 
 def printTrees():
     construct_graph(tree.root).write_png('Images/BaseTrees/tree.png')
@@ -121,32 +121,60 @@ def insertTest(): # am just going to insert a ton to the tree
     construct_graph(tree2.root).write_png('Images/InsertTest/insertTest2.png')
 
 def deleteTest(): # am going to delete some from the previous tree
-    return None
+    tree2.delete(10)
+    construct_graph(tree2.root).write_png('Images/DeleteTest/deleteTest.png')
+    tree2.delete(30)
+    construct_graph(tree2.root).write_png('Images/DeleteTest/deleteTest.png')
+    tree2.delete(60)
+    construct_graph(tree2.root).write_png('Images/DeleteTest/deleteTest.png')
+    tree2.delete(35)
+    construct_graph(tree2.root).write_png('Images/DeleteTest/deleteTest.png')
+    tree2.delete(36) # this does not exist in the tree
+    construct_graph(tree2.root).write_png('Images/DeleteTest/deleteTest.png')
+    tree2.delete(16)
+    construct_graph(tree2.root).write_png('Images/DeleteTest/deleteTest.png')
+    tree2.delete(24)
+    construct_graph(tree2.root).write_png('Images/DeleteTest/deleteTest.png')
+    tree2.delete(31)
+    construct_graph(tree2.root).write_png('Images/DeleteTest/deleteTest.png')
 
 def splayTest():
-    # splay existing
-    # splay nonexisting
-    return None
+    existGpt = copy.deepcopy(gpt_tree3)
+    construct_graph(existGpt.root).write_png('Images/SplayTest/splay.png')
 
 # test will work essentially as a second splay test
 def searchTest():
     # search existing
+    newTree = copy.deepcopy(gpt_tree3)
+    print(newTree.search(9))
+    construct_graph(newTree.root).write_png('Images/SearchTest/existsSearch.png')
     # search nonexisting (inorder predecessor/successor)
-    return None
+    newTree = copy.deepcopy(gpt_tree3)
+    print(newTree.search(11))
+    construct_graph(newTree.root).write_png('Images/SearchTest/nonexistSearch.png')
 
-def inorderTest():
-    return None
+# for unit testing
+class TestStringMethods(unittest.TestCase):
 
-def preorderTest():
-    return None
+    def inorderTest(self):
+        self.assertEqual(inorder(example_tree2.root), [10, 30, 50, 55, 57, 59, 60])
 
-def postorderTest():
-    return None
+    def preorderTest(self):
+        self.assertEqual(preorder(example_tree2.root), [30, 10, 50, 59, 57, 55, 60])
+
+    def postorderTest(self):
+        self.assertEqual(postorder(example_tree2.root), [10, 55, 57, 60, 59, 50, 30])
 
 
 # produces all the graphs from the visualizer in the images directory.
-printTrees()
+# realizing while writing these tests that if I run them all it runs very slowly. May attempt to optimize a little at some point
+# in the splay tree file.
+#printTrees()
 #zigTest()
 #zigZigTest()
 #zigZagTest()
-insertTest()
+#insertTest()
+#deleteTest()
+#splayTest()
+#searchTest()
+unittest.main()

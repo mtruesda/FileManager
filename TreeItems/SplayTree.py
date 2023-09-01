@@ -7,14 +7,14 @@ class Node:                     # reimplemented to include parent local variable
         self.right = None       # right node option
         self.parent = None      # parent node option -- necessary for splay to work as intended.
     def __str__(self):
-        print(self.key)         # not sure why this doesn't work :/
+        return str(self.key)         # not sure why this doesn't work :/
 
 class SplayTree:                # with this rewrite I decided to make the tree an object
     def __init__(self, tree):
         if tree:
             self.root = tree
         else:
-            None
+            self.root = None
 
     def zig(self, x):
         p = x.parent
@@ -114,65 +114,61 @@ class SplayTree:                # with this rewrite I decided to make the tree a
             return None
         return None
 
-    # this may just need to be rewritten
+    # it uses search.
     def delete(self, key):
-        return None
-        # node_to_delete = self.search(key)
-        # if node_to_delete is None:
-        #     return
+        node_to_delete = self.search(key) # returns node if it exists, otherwise just splays the tree
+        if node_to_delete is None:
+             return                       # key didn't exist
 
-        # self.splay(node_to_delete)
-        # if node_to_delete.left and node_to_delete.right:
-        #     min_node = node_to_delete.left
-        #     while min_node.right:
-        #         min_node = min_node.right
-        #     node_to_delete.key = min_node.key
-        #     if min_node.parent.right == min_node:
-        #         min_node.parent.right = min_node.left
-        #     else:
-        #         min_node.parent.left = min_node.left
-        #     if min_node.left:
-        #         min_node.left.parent = min_node.parent
-        # else:
-        #     if node_to_delete.left:
-        #         self.root = node_to_delete.left
-        #     else:
-        #         self.root = node_to_delete.right
+        if node_to_delete.left and node_to_delete.right: # if both exist, we need to do weird stuff
+            min_node = node_to_delete.left               # looks for the highest node in the left subtree (inorder successor)
+            while min_node.right:
+                min_node = min_node.right
+            node_to_delete.key = min_node.key
+            if min_node.parent.right == min_node:
+                min_node.parent.right = min_node.left
+            else:
+                min_node.parent.left = min_node.left
+            if min_node.left:
+                min_node.left.parent = min_node.parent
+        else:                                            # if only one exists, we only need that subtree
+            if node_to_delete.left:
+                self.root = node_to_delete.left
+            else:
+                self.root = node_to_delete.right
 
-        #     if self.root:
-        #         self.root.parent = None
+            if self.root:
+                self.root.parent = None
     
-    # these three functions will return a list of nodes and I'll determine later how I want to parse that list
-    # may consider adding balance to the tree to see more accurate distance results
-    # using balance may allow me to see what is furthest or closest in the tree allowing for both a recents and a least recents section
+# these three functions will return a list of nodes and I'll determine later how I want to parse that list
+# may consider adding balance to the tree to see more accurate distance results
+# using balance may allow me to see what is furthest or closest in the tree allowing for both a recents and a least recents section
+def inorder(root):
+    lst = []
+    if root.left != None:
+        lst += inorder(root.left)
+    lst.append(root)
+    if root.right != None:
+        lst += inorder(root.right)
+    return lst
+    
+def preorder(root):
+    lst = [root]
+    if root.left != None:
+        lst += preorder(root.left)
+    if root.right != None:
+        lst += preorder(root.right)
+    return lst
+    
+def postorder(root):
+    lst = []
+    if root.left != None:
+        lst += postorder(root.left)
+    if root.right != None:
+        lst += postorder(root.right)
+    lst.append(root)
+    return lst
 
-    def inorder(self, root):
-        lst = []
-        if root.left != None:
-            lst += self.inorder(root.left)
-        lst.append(root)
-        if root.right != None:
-            lst += self.inorder(root.right)
-        return lst
-    
-    def preorder(self, root):
-        lst = [root]
-        if root.left != None:
-            lst += self.preorder(root.left)
-        if root.right != None:
-            lst += self.preorder(root.right)
-        return lst
-    
-    def postorder(self, root):
-        lst = []
-        if root.left != None:
-            lst += self.postorder(root.left)
-        if root.right != None:
-            lst += self.postorder(root.right)
-        lst.append(root)
-        return lst
-
-    
 # new load_tree function that plays with json strings... *yay*
 # this actually wasn't that bad to put together with the parent portion
 def load_tree(json_str: str) -> Node:

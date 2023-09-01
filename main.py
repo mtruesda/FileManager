@@ -4,43 +4,45 @@ from FileManagement import *
 from pydot_graph_util import *
 from TreeItems.SplayTree import *
 
-def treeBuilder(path, tree):
+# Builds the tree from what exists in the directory
+def treeBuilder(path, splayTree):
     # starting from the outside
     for name in os.listdir(path):
         new_path = path + '/' + name
         if os.path.isdir(new_path):
-            tree = treeBuilder(new_path, tree)
-    # add the ends
-    for name in os.listdir(path):
-        new_path = path + '/' + name
-        if not os.path.isdir(new_path):
-            tree = insert1(tree, path + '/' + name)
-    return tree
+            treeBuilder(new_path, splayTree)
+        else:
+            splayTree.insert(new_path)
+    return splayTree
 
+# fills the listbox with the items in the ManagedFiles Directory
 def fill_listbox(path):
     listbox.delete(0, tk.END)
     for name in os.listdir(path):
-        listbox.insert1(tk.END, name)
+        listbox.insert(tk.END, name)
 
+# for saving the tree when the file manager is closed--UPDATE TO SAVE
 def on_close():
     # file = open('TreeItems/TreeStorage.txt', 'w') 
     # file.write(dump_tree(tree)) 
     root.destroy()
 
-def on_click(event, tree):
+# Specifically handles when listbox items are clicked
+def on_click(event, tree): # fix this
     # If user double clicks on directory, open it
     index = listbox.curselection()
     file = listbox.get(index)
     new_path = os.path.join(current_directory.get(), file)
 
-    if os.path.isdir(new_path):
+    if os.path.isdir(new_path):          # If it's a directory it sets the current directory to the new path and fixes the listbox
         current_directory.set(new_path)
         fill_listbox(new_path)
-    else:
+    else:                                # otherwise, it opens the file
         open_file(new_path)
-        tree = splay(tree, new_path)
-        construct_graph(tree).write_png('Images/TreeBuilderTest.png')
+        tree.search(new_path)
+        construct_graph(tree.root).write_png('Images/ActiveUse/TreeBuilderTest.png')
 
+# for when the back button is selected
 def go_back():
     current_path = current_directory.get()
     parent_path = os.path.dirname(current_path)
@@ -48,6 +50,7 @@ def go_back():
         current_directory.set(parent_path)
         fill_listbox(parent_path)
 
+# adds a file to the directory
 def new_file():
     print("new file")
 
@@ -64,12 +67,13 @@ initial_directory = home()  # Replace with your path
 # determining the tree existance
 file = open('TreeItems/TreeStorage.txt', 'r')
 line = file.readline().strip()
-tree = load_tree(line)
+tree = SplayTree(load_tree(line))
 file.close()
 
-if tree is None:
-    tree = treeBuilder(initial_directory, None)
-    construct_graph(tree).write_png('Images/TreeBuilderTest.png')
+# checks that files that exist in the directory are added to the tree
+if tree.root is None:
+    tree = treeBuilder(initial_directory, tree)
+    construct_graph(tree.root).write_png('Images/ActiveUse/TreeBuilderTest.png') # to show us the resulting tree
 
 # Buttons
 button_frame = tk.Frame(root)

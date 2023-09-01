@@ -30,27 +30,25 @@ def fileDeterminer(string):
     else:
         return "Folder"
     
-def create_file(path, filename, root):
-    root = insert(root, path + '/' + filename)
+def create_file(path, filename, splayTree):
+    splayTree.insert(path + '/' + filename)
     open(path + '/' + filename, 'w').close()
-    return root
 
-def create_folder(path, foldername):
+def create_folder(path, foldername, splayTree):
     os.makedirs(path + '/' + foldername)
 
-def delete_path(path, tree):
+def delete_path(path, splayTree):
     if fileDeterminer(path) == 'File':
         os.remove(path)
-        tree = delete(tree, path)
+        splayTree.delete(path)
     elif fileDeterminer(path) == 'Folder':
         file_list = os.listdir(path)
         ## MAY RESULT IN ISSUES
         for file in file_list:
-            tree = delete(tree, file)
+            splayTree.delete(file)
         shutil.rmtree(path)
     else:
         raise RuntimeError("issue somewhere")
-    return tree
 
 # used to obtain the "home" directory for the project
 def home():
