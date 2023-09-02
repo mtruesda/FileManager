@@ -17,29 +17,29 @@ class SplayTree:                # with this rewrite I decided to make the tree a
             self.root = None
 
     def zig(self, x):
-        p = x.parent
-        if p.left == x: # right rotation
-            p.left = x.right
-            x.right = p
-            x.parent = p.parent
-            p.parent = x
+        parent = x.parent
+        if parent.left == x: # right rotation
+            parent.left = x.right
+            x.right = parent
+            x.parent = parent.parent
+            parent.parent = x
         else:           # left rotation
-            p.right = x.left
-            x.left = p
-            x.parent = p.parent
-            p.parent = x
+            parent.right = x.left
+            x.left = parent
+            x.parent = parent.parent
+            parent.parent = x
 
         if not x.parent:         # updates root when necessary
             self.root = x        # if x doesn't have a parent then it becomes the new root
-        elif x.parent.left == p: # replace parent of parents child with x -- fucking confusing shit
+        elif x.parent.left == parent: # replace parent of parents child with x -- fucking confusing shit
             x.parent.left = x
         else:
             x.parent.right = x   # does the same
 
-        if p.left:               # updates the parent pointers to the left and right children of p after p has replaced x
-            p.left.parent = p
-        if p.right:
-            p.right.parent = p
+        if parent.left:               # updates the parent pointers to the left and right children of p after p has replaced x
+            parent.left.parent = parent
+        if parent.right:
+            parent.right.parent = parent
 
     def zigzig(self, x):   # abstracted properly this time thank god
         self.zig(x.parent)

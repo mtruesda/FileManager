@@ -27,6 +27,7 @@ def fill_listbox(path, listbox):
         print('Permission denied.')
 
 # for saving the tree when the file manager is closed--UPDATE TO SAVE
+# realizing that this may happen automatically as when the file manager is opened, it loads from existing files--making saving unnecessary
 def on_close():
     # file = open('TreeItems/TreeStorage.txt', 'w') 
     # file.write(dump_tree(tree)) 
