@@ -26,6 +26,8 @@ As I go along, I have been finding random ways to improve my file manager. I've 
 
 A big consideration when looking at what the keys of the nodes will look like is how to represent file locations. I'm currently planning to use filepaths. I haven't quite found any other way of doing it.
 
+Note week of 08/27: Added parents to the nodes so that splaying became significantly easier.
+
 ### FileManagement.py
 
 this file just contains the backend code involved with determining the os and pulling up the file using the default application of the machine.
